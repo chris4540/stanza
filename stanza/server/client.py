@@ -17,6 +17,7 @@ import time
 import sys
 import uuid
 
+from glob import glob
 from six.moves.urllib.parse import urlparse
 
 from stanza.protobuf import Document, parseFromDelimitedString, writeToDelimitedString, to_text
@@ -254,7 +255,7 @@ class CoreNLPClient(RobustService):
                 classpath = os.getenv("CORENLP_HOME")
                 assert classpath is not None, \
                     "Please define $CORENLP_HOME to be location of your CoreNLP distribution or pass in a classpath parameter"
-                classpath = classpath + "/*"
+                classpath = ":".join(classpath + "/*.jar")
             start_cmd = f"java -Xmx{memory} -cp '{classpath}'  edu.stanford.nlp.pipeline.StanfordCoreNLPServer " \
                         f"-port {port} -timeout {timeout} -threads {threads} -maxCharLength {max_char_length} " \
                         f"-quiet {be_quiet} -serverProperties {self.server_props_file['path']}"
